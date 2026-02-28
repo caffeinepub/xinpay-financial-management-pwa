@@ -1,0 +1,80 @@
+{
+  "kind": "build_request",
+  "title": "Implement Version 33 Account System Without Failed Status",
+  "projectName": "XinPay",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement a local authentication account system (signup, login, session management) using localStorage — similar to the version 33 approach — so users can register and log in without relying on Internet Identity. The system must store user profiles with INR/USDT balances and persist session state across page reloads.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "version 33 jaisa account wala system kre do"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can sign up with a username and password stored in localStorage",
+        "Users can log in with valid credentials and their session persists on page reload",
+        "New accounts are created with default INR and USDT balances",
+        "Logout clears the session from localStorage"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Remove all 'Failed', 'Error', or failure-state messages and indicators from the login/signup flow and account system UI. Instead of showing failure notifications (e.g., 'Login failed', 'Signup failed', error toasts), silently handle errors or show only neutral/pending feedback to the user.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "jo failed na bataye"
+        ]
+      },
+      "acceptanceCriteria": [
+        "No toast, alert, or inline message displaying 'failed', 'error', or any failure state appears during login or signup",
+        "Invalid login attempts do not show an error message to the user",
+        "Duplicate signup attempts do not show a failure message",
+        "The UI gracefully handles edge cases without surfacing failure states"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "On the Login/Signup page (LoginPage.tsx), ensure the tab-based form UI continues to work correctly with the updated local auth system, including input validation and spinner feedback, but without any failure/error toast notifications or inline error messages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "version 33 jaisa account wala system kre do jo failed na bataye"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Login and Signup tabs render correctly",
+        "Spinner/loading feedback still appears during form submission",
+        "No error or failure messages are shown at any point in the auth flow",
+        "Successful login navigates the user to the main app"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
+    "Do not remove or break the existing Internet Identity integration — local auth should coexist or be toggled as the primary auth method",
+    "Do not show any 'failed', 'error', or failure-related UI text anywhere in the account/auth flow"
+  ],
+  "nonGoals": [
+    "Changing the backend Motoko actor or data models",
+    "Adding new financial features (deposits, withdrawals)",
+    "Modifying pages other than LoginPage and the local auth hook",
+    "Implementing biometric or third-party authentication"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

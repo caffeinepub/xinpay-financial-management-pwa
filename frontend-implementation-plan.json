@@ -1,0 +1,68 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Implement Version 33 Account System Without Failed Status",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Implement local authentication account system with localStorage-based signup, login, and session management, storing user profiles with INR/USDT balances and persisting session state across page reloads",
+      "acceptanceCriteria": [
+        "Users can sign up with a username and password stored in localStorage",
+        "Users can log in with valid credentials and their session persists on page reload",
+        "New accounts are created with default INR and USDT balances",
+        "Logout clears the session from localStorage"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useLocalAuth.ts",
+          "operation": "modify",
+          "description": "Extend the existing useLocalAuth hook to add password-based authentication. Add a 'password' field to the stored user profile structure. Implement signup function that creates new accounts with username, password (hashed using a simple approach for localStorage), default INR balance (1000), and default USDT balance (0). Implement login function that validates username and password against stored credentials. Ensure session persistence across page reloads by checking localStorage on hook initialization. Implement logout function that clears the current session from localStorage while preserving the user database."
+        },
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Update the LoginPage component to integrate the enhanced useLocalAuth hook with password-based authentication. Modify the signup form to collect username and password fields. Modify the login form to collect username and password and call the updated login function from useLocalAuth. Remove all toast notifications, error messages, and failure state indicators from both login and signup flows. Replace error toasts with silent error handling or neutral feedback. Ensure spinner/loading feedback continues to work during form submission. On successful login, navigate to the main app without showing any success message. Keep the tab-based UI structure intact."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Remove all 'Failed', 'Error', or failure-state messages and indicators from the login/signup flow and account system UI, handling errors silently or with neutral feedback only",
+      "acceptanceCriteria": [
+        "No toast, alert, or inline message displaying 'failed', 'error', or any failure state appears during login or signup",
+        "Invalid login attempts do not show an error message to the user",
+        "Duplicate signup attempts do not show a failure message",
+        "The UI gracefully handles edge cases without surfacing failure states"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Remove all toast.error(), toast.warning(), and any inline error message rendering from the login and signup form handlers. Replace error handling logic to fail silently or show only neutral feedback (e.g., clear the form, show a subtle spinner briefly). Remove any conditional rendering of error text or failure state UI elements. Ensure that invalid credentials, duplicate usernames, or any other error conditions do not produce visible failure messages to the user."
+        },
+        {
+          "path": "frontend/src/hooks/useLocalAuth.ts",
+          "operation": "modify",
+          "description": "Update the signup and login functions to return neutral results (e.g., boolean success flags) without throwing errors or returning error messages. Remove any error strings or failure indicators from the return types. Ensure that validation failures (e.g., user already exists, invalid credentials) are handled internally without surfacing error details to the calling component."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Ensure the Login/Signup page tab-based form UI works correctly with the updated local auth system, including input validation and spinner feedback, without any failure/error toast notifications or inline error messages",
+      "acceptanceCriteria": [
+        "Login and Signup tabs render correctly",
+        "Spinner/loading feedback still appears during form submission",
+        "No error or failure messages are shown at any point in the auth flow",
+        "Successful login navigates the user to the main app"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Verify that the tab-based UI (Login and Signup tabs) renders correctly with the updated useLocalAuth integration. Ensure input validation logic remains in place for username and password fields (e.g., minimum length checks, required field validation) but does not display validation error messages to the user. Maintain the spinner/loading state during form submission (set loading state to true while processing signup or login, then false afterward). On successful login, trigger navigation to the main app (conditionally rendering MainApp from App.tsx or redirecting as appropriate). Remove all toast notifications related to authentication success or failure."
+        }
+      ]
+    }
+  ]
+}

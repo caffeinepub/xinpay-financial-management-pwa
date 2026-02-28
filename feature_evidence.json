@@ -1,0 +1,65 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-a-local-authentication-account-system-signup-login-session-management-using-localstorage-similar-to-the-version-33-approach-so-users-can-register-and-log-in-without-relying-on-internet-identity-the-system-must-store-user-profiles-with-inr-usdt-balances-and-persist-session-state-across-page-reloads",
+      "featureTitle": "Implement a local authentication account system (signup, login, session management) using localStorage — similar to the version 33 approach — so users can register and log in without relying on Internet Identity. The system must store user profiles with INR/USDT balances and persist session state across page reloads.",
+      "files": [
+        "frontend/src/pages/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-all-failed-error-or-failure-state-messages-and-indicators-from-the-login-signup-flow-and-account-system-ui-instead-of-showing-failure-notifications-e-g-login-failed-signup-failed-error-toasts-silently-handle-errors-or-show-only-neutral-pending-feedback-to-the-user",
+      "featureTitle": "Remove all 'Failed', 'Error', or failure-state messages and indicators from the login/signup flow and account system UI. Instead of showing failure notifications (e.g., 'Login failed', 'Signup failed', error toasts), silently handle errors or show only neutral/pending feedback to the user.",
+      "files": [
+        "frontend/src/pages/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-on-the-login-signup-page-loginpage-tsx-ensure-the-tab-based-form-ui-continues-to-work-correctly-with-the-updated-local-auth-system-including-input-validation-and-spinner-feedback-but-without-any-failure-error-toast-notifications-or-inline-error-messages",
+      "featureTitle": "On the Login/Signup page (LoginPage.tsx), ensure the tab-based form UI continues to work correctly with the updated local auth system, including input validation and spinner feedback, but without any failure/error toast notifications or inline error messages.",
+      "files": [
+        "frontend/src/pages/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

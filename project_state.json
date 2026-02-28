@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-implement-a-local-authentication-account-system-signup-login-session-management-using-localstorage-similar-to-the-version-33-approach-so-users-can-register-and-log-in-without-relying-on-internet-identity-the-system-must-store-user-profiles-with-inr-usdt-balances-and-persist-session-state-across-page-reloads",
+      "title": "Implement a local authentication account system (signup, login, session management) using localStorage — similar to the version 33 approach — so users can register and log in without relying on Internet Identity. The system must store user profiles with INR/USDT balances and persist session state across page reloads.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-failed-error-or-failure-state-messages-and-indicators-from-the-login-signup-flow-and-account-system-ui-instead-of-showing-failure-notifications-e-g-login-failed-signup-failed-error-toasts-silently-handle-errors-or-show-only-neutral-pending-feedback-to-the-user",
+      "title": "Remove all 'Failed', 'Error', or failure-state messages and indicators from the login/signup flow and account system UI. Instead of showing failure notifications (e.g., 'Login failed', 'Signup failed', error toasts), silently handle errors or show only neutral/pending feedback to the user.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-on-the-login-signup-page-loginpage-tsx-ensure-the-tab-based-form-ui-continues-to-work-correctly-with-the-updated-local-auth-system-including-input-validation-and-spinner-feedback-but-without-any-failure-error-toast-notifications-or-inline-error-messages",
+      "title": "On the Login/Signup page (LoginPage.tsx), ensure the tab-based form UI continues to work correctly with the updated local auth system, including input validation and spinner feedback, but without any failure/error toast notifications or inline error messages.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Implement account system similar to version 33 that does not show 'failed' status/errors",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "XinPay",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
