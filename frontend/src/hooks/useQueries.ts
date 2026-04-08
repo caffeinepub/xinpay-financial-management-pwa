@@ -201,6 +201,7 @@ export function useSaveCompleteBankDetails() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['completeBankDetails'] });
+      queryClient.invalidateQueries({ queryKey: ['allBankAccounts'] });
     },
     onError: (error: Error) => {
       console.error('Failed to save bank details:', error.message);
@@ -268,7 +269,6 @@ export function useUpdateBankAccountStatus() {
   return useMutation({
     mutationFn: async ({ withdrawalId, newStatus }: { withdrawalId: bigint; newStatus: BankAccountStatus }) => {
       if (!actor) throw new Error('Actor not available');
-      // Map BankAccountStatus to BankStatus for the withdrawal status update
       const bankStatus = newStatus === BankAccountStatus.liveActive
         ? { __kind__: 'liveActive' as const }
         : newStatus === BankAccountStatus.rejected
@@ -284,5 +284,22 @@ export function useUpdateBankAccountStatus() {
     onError: (error: Error) => {
       toast.error(`Failed to update status: ${error.message}`);
     },
+  });
+}
+
+// Fetch all bank accounts (public — no auth required)
+export function useGetAllBankAccounts() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<BankDetailsWithoutNetBanking[]>({
+    queryKey: ['allBankAccounts'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllBankAccounts();
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: 0,
+    gcTime: 0,
+    retry: false,
   });
 }

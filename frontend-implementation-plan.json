@@ -1,66 +1,102 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Implement Version 33 Account System Without Failed Status",
+  "title": "Fix Active Accounts Page — Show Submitted Bank Accounts with Status Indicators",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Implement local authentication account system with localStorage-based signup, login, and session management, storing user profiles with INR/USDT balances and persisting session state across page reloads",
+      "summary": "Remove authentication errors from Active Accounts page and allow public access without login",
       "acceptanceCriteria": [
-        "Users can sign up with a username and password stored in localStorage",
-        "Users can log in with valid credentials and their session persists on page reload",
-        "New accounts are created with default INR and USDT balances",
-        "Logout clears the session from localStorage"
+        "Active Accounts page loads without any error message",
+        "No authentication or login is required to view the accounts page",
+        "Backend does not return unauthorized error when fetching bank accounts"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useLocalAuth.ts",
+          "path": "frontend/src/components/ActiveAccountsPage.tsx",
           "operation": "modify",
-          "description": "Extend the existing useLocalAuth hook to add password-based authentication. Add a 'password' field to the stored user profile structure. Implement signup function that creates new accounts with username, password (hashed using a simple approach for localStorage), default INR balance (1000), and default USDT balance (0). Implement login function that validates username and password against stored credentials. Ensure session persistence across page reloads by checking localStorage on hook initialization. Implement logout function that clears the current session from localStorage while preserving the user database."
+          "description": "Remove any authentication checks that prevent loading the page. Update the page to call the public backend method getAllBankAccounts() instead of any user-specific method. Handle the case where the backend returns a list of BankDetailsWithoutNetBanking objects with status field (pending, rejected, liveActive). Remove error handling for unauthorized access and display accounts without requiring authentication."
         },
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Update the LoginPage component to integrate the enhanced useLocalAuth hook with password-based authentication. Modify the signup form to collect username and password fields. Modify the login form to collect username and password and call the updated login function from useLocalAuth. Remove all toast notifications, error messages, and failure state indicators from both login and signup flows. Replace error toasts with silent error handling or neutral feedback. Ensure spinner/loading feedback continues to work during form submission. On successful login, navigate to the main app without showing any success message. Keep the tab-based UI structure intact."
+          "description": "Add a new React Query hook useGetAllBankAccounts that calls actor.getAllBankAccounts() to fetch all bank accounts without authentication. This hook should not depend on Internet Identity or any authentication state and should be enabled immediately when the actor is available."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Remove all 'Failed', 'Error', or failure-state messages and indicators from the login/signup flow and account system UI, handling errors silently or with neutral feedback only",
+      "summary": "Display bank accounts as cards with Bank Name, Account Type, and masked Account Number (last 4 digits)",
       "acceptanceCriteria": [
-        "No toast, alert, or inline message displaying 'failed', 'error', or any failure state appears during login or signup",
-        "Invalid login attempts do not show an error message to the user",
-        "Duplicate signup attempts do not show a failure message",
-        "The UI gracefully handles edge cases without surfacing failure states"
+        "Each bank account is shown as a card with Bank Name, Account Type, and masked Account Number",
+        "Account number shows only last 4 digits (e.g., ****1234)",
+        "All submitted accounts are listed on the page"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
+          "path": "frontend/src/components/ActiveAccountsPage.tsx",
           "operation": "modify",
-          "description": "Remove all toast.error(), toast.warning(), and any inline error message rendering from the login and signup form handlers. Replace error handling logic to fail silently or show only neutral feedback (e.g., clear the form, show a subtle spinner briefly). Remove any conditional rendering of error text or failure state UI elements. Ensure that invalid credentials, duplicate usernames, or any other error conditions do not produce visible failure messages to the user."
+          "description": "Redesign the page to display each BankDetailsWithoutNetBanking object as a card. Extract Bank Name from the bankName field. Since BankDetailsWithoutNetBanking does not have an explicit accountType field, derive it from available data or display 'Savings' as default. Mask the accountNumber field to show only the last 4 digits (e.g., ****1234) using a helper function. Layout cards in a responsive grid with clear visual separation between accounts."
         },
         {
-          "path": "frontend/src/hooks/useLocalAuth.ts",
-          "operation": "modify",
-          "description": "Update the signup and login functions to return neutral results (e.g., boolean success flags) without throwing errors or returning error messages. Remove any error strings or failure indicators from the return types. Ensure that validation failures (e.g., user already exists, invalid credentials) are handled internally without surfacing error details to the calling component."
+          "path": "frontend/src/utils/maskAccountNumber.ts",
+          "operation": "create",
+          "description": "Create a utility function maskAccountNumber(accountNumber: string): string that returns a masked version showing only the last 4 digits (e.g., '123456789012' becomes '****9012'). Handle edge cases for account numbers shorter than 4 digits."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Ensure the Login/Signup page tab-based form UI works correctly with the updated local auth system, including input validation and spinner feedback, without any failure/error toast notifications or inline error messages",
+      "summary": "Show colored status dots on each account card (Yellow=Pending, Green=Live Active, Red=Rejected)",
       "acceptanceCriteria": [
-        "Login and Signup tabs render correctly",
-        "Spinner/loading feedback still appears during form submission",
-        "No error or failure messages are shown at any point in the auth flow",
-        "Successful login navigates the user to the main app"
+        "Each account card displays a colored status dot",
+        "Newly submitted accounts show a yellow (Pending) dot by default",
+        "Accounts with 'active' status show a green dot",
+        "Accounts with 'rejected' or 'error' status show a red dot",
+        "Status dot is clearly visible on the card"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
+          "path": "frontend/src/components/ActiveAccountsPage.tsx",
           "operation": "modify",
-          "description": "Verify that the tab-based UI (Login and Signup tabs) renders correctly with the updated useLocalAuth integration. Ensure input validation logic remains in place for username and password fields (e.g., minimum length checks, required field validation) but does not display validation error messages to the user. Maintain the spinner/loading state during form submission (set loading state to true while processing signup or login, then false afterward). On successful login, trigger navigation to the main app (conditionally rendering MainApp from App.tsx or redirecting as appropriate). Remove all toast notifications related to authentication success or failure."
+          "description": "Add a status indicator to each account card. Map the status field from BankDetailsWithoutNetBanking (pending, liveActive, rejected) to colored dots: pending → yellow dot, liveActive → green dot, rejected → red dot. Display the dot prominently on each card along with a text label (e.g., 'Pending', 'Live Active', 'Rejected'). Use Tailwind CSS classes for the colored dots (e.g., bg-yellow-500, bg-green-500, bg-red-500) with appropriate sizing and positioning."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Newly submitted accounts from BankDetailsForm appear immediately in Active Accounts page with Pending status",
+      "acceptanceCriteria": [
+        "After submitting bank details from any page, navigating to the Accounts tab shows the new account",
+        "Newly submitted account appears with Pending (yellow) status",
+        "No page refresh required — account appears immediately after submission"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/forms/BankDetailsForm.tsx",
+          "operation": "modify",
+          "description": "After successfully calling saveCompleteBankDetails in the mutation's onSuccess callback, invalidate the 'allBankAccounts' query key to trigger a refetch of the bank accounts list. Ensure the success toast is shown and the form reflects the submission. The new account should have a default status of 'pending' set by the backend."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Ensure the useGetAllBankAccounts hook has a queryKey of ['allBankAccounts'] so that invalidateQueries can target it. Configure the query to refetch automatically when invalidated to ensure the Active Accounts page updates immediately after form submission."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Show friendly empty state message when no bank accounts exist",
+      "acceptanceCriteria": [
+        "Empty state message is shown when no accounts exist",
+        "Empty state does not show any error message",
+        "Empty state includes a prompt or hint to add bank details"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ActiveAccountsPage.tsx",
+          "operation": "modify",
+          "description": "Add a conditional rendering block that checks if the accounts array is empty after successfully loading. If empty, display a friendly empty state message such as 'No accounts added yet. Submit your bank details to get started.' with an optional icon or illustration. Ensure this empty state is visually distinct from error states and provides a clear call-to-action hint."
         }
       ]
     }

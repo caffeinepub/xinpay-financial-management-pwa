@@ -129,6 +129,7 @@ export interface _SERVICE {
   'addDepositLimitWarning' : ActorMethod<[string, DepositType, bigint], bigint>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createUserProfile' : ActorMethod<[string, string], undefined>,
+  'getAllBankAccounts' : ActorMethod<[], Array<BankDetailsWithoutNetBanking>>,
   'getAllBankWithdrawals' : ActorMethod<[], Array<BankWithdrawal>>,
   'getAllBankWithdrawalsByTime' : ActorMethod<[], Array<BankWithdrawal>>,
   'getAllCompleteBankDetails' : ActorMethod<

@@ -1,40 +1,42 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-28T01:35:30.279Z",
-  "summary": "The diff implements a local authentication system via useLocalAuth hook, updates LoginPage.tsx with tab-based UI, silent error handling, and spinner feedback. Most requirements appear to be addressed, but the useLocalAuth hook file itself is not shown directly in the diff (only referenced in the file summary), making full verification of REQ-1 acceptance criteria partially dependent on the truncated summary.",
+  "generatedAt": "2026-03-01T19:18:09.914Z",
+  "summary": "The diff implements most of the required features: a new ActiveAccountsPage component with masked account numbers, colored status dots, empty state handling, a useGetAllBankAccounts hook, and backend changes with a status field defaulting to #pending. However, there is a gap around REQ-1's backend 'no authentication required' AC — the getAllBankAccounts backend function is referenced but its implementation (removing auth guard) is truncated and not fully verifiable. REQ-4's 'no page refresh required' is addressed via query invalidation on save. Overall coverage is strong with minor uncertainty due to truncation.",
   "missing_requirements": [
     {
-      "requirement": "Logout clears the session from localStorage (REQ-1 AC)",
-      "reason": "The diff does not show any logout functionality being implemented or tested. LoginPage.tsx only handles login and signup. The useLocalAuth hook summary mentions login/signup but does not explicitly confirm a logout function that clears localStorage session.",
+      "id": "REQ-1",
+      "requirement": "Backend must not return unauthorized error when fetching bank accounts — the getAllBankAccounts endpoint must work without authentication.",
+      "reason": "The backend/main.mo diff is truncated and the actual implementation of getAllBankAccounts (whether it removes the auth guard) is not visible in the diff. The frontend-file-summaries.txt states the hook calls actor.getAllBankAccounts() with no auth required, but the backend-side enforcement of this cannot be confirmed from the truncated diff.",
       "evidence": [
-        "frontend/src/hooks/useLocalAuth.ts",
-        "frontend/src/pages/LoginPage.tsx"
+        "backend/main.mo"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Default INR balance set to 1000.00 for new user registrations",
-      "reason": "The build request states new accounts are created with default INR and USDT balances but does not specify specific values. The file summary for useLocalAuth.ts explicitly mentions default balance values set to INR 1000.00 and USDT 0.00. Setting specific numeric values was not requested — the requirement only says default balances without specifying amounts.",
+      "description": "On error during bank details submission (saveBankDetails onError), the form suppresses the error and shows a success toast instead of surfacing the error to the user.",
+      "reason": "The build request does not ask for error suppression or showing a false success message on failure. This behavior was not requested and could be misleading.",
       "evidence": [
-        "frontend/src/hooks/useLocalAuth.ts",
-        "frontend-file-summaries.txt"
+        "frontend/src/components/forms/BankDetailsForm.tsx"
       ]
     },
     {
-      "description": "One-time migration that updates all existing users INR balances",
-      "reason": "The build request does not mention any migration of existing user data. The file summary for useLocalAuth.ts mentions a one-time migration that updates all existing users INR balances which was not requested.",
+      "description": "A migration module (migration.mo) was added to handle actor state migration from old to new bank details schema.",
+      "reason": "The build request does not mention any migration requirement. While this may be necessary for deployment, it was not specified as a requirement.",
       "evidence": [
-        "frontend/src/hooks/useLocalAuth.ts",
-        "frontend-file-summaries.txt"
+        "backend/migration.mo"
       ]
     }
   ],
-  "confidence": 0.72,
+  "confidence": 0.78,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/components/ActiveAccountsPage.tsx",
+    "frontend/src/components/forms/BankDetailsForm.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]
 }

@@ -208,6 +208,7 @@ export interface backendInterface {
     addDepositLimitWarning(warning: string, depositType: DepositType, limit: bigint): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createUserProfile(username: string, email: string): Promise<void>;
+    getAllBankAccounts(): Promise<Array<BankDetailsWithoutNetBanking>>;
     getAllBankWithdrawals(): Promise<Array<BankWithdrawal>>;
     getAllBankWithdrawalsByTime(): Promise<Array<BankWithdrawal>>;
     getAllCompleteBankDetails(): Promise<Array<[Principal, BankDetailsWithoutNetBankingV1]>>;
@@ -405,32 +406,46 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getAllBankAccounts(): Promise<Array<BankDetailsWithoutNetBanking>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllBankAccounts();
+                return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllBankAccounts();
+            return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getAllBankWithdrawals(): Promise<Array<BankWithdrawal>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllBankWithdrawals();
-                return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllBankWithdrawals();
-            return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAllBankWithdrawalsByTime(): Promise<Array<BankWithdrawal>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllBankWithdrawalsByTime();
-                return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllBankWithdrawalsByTime();
-            return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAllCompleteBankDetails(): Promise<Array<[Principal, BankDetailsWithoutNetBankingV1]>> {
@@ -479,42 +494,42 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllDepositWarnings();
-                return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n21(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllDepositWarnings();
-            return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n21(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAllScreenshots(arg0: DepositType): Promise<Array<Screenshot>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllScreenshots(to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg0));
-                return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllScreenshots(to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg0));
-            return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
         }
     }
     async getAllScreenshotsByTime(arg0: DepositType): Promise<Array<Screenshot>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllScreenshotsByTime(to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg0));
-                return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getAllScreenshotsByTime(to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg0));
-            return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
         }
     }
     async getBankDetails(): Promise<BankDetails> {
@@ -535,42 +550,42 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserProfile();
-                return from_candid_opt_n26(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n30(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserProfile();
-            return from_candid_opt_n26(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n30(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCallerUserRole(): Promise<UserRole> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserRole();
-                return from_candid_UserRole_n27(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserRole_n31(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserRole();
-            return from_candid_UserRole_n27(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserRole_n31(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCompleteBankDetails(): Promise<BankDetailsWithoutNetBankingV1 | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCompleteBankDetails();
-                return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCompleteBankDetails();
-            return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
         }
     }
     async getDefaultBalances(): Promise<[bigint, bigint]> {
@@ -611,28 +626,28 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserBankWithdrawals();
-                return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserBankWithdrawals();
-            return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserCompleteBankDetails(arg0: Principal): Promise<BankDetailsWithoutNetBankingV1 | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserCompleteBankDetails(arg0);
-                return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserCompleteBankDetails(arg0);
-            return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserCryptoWithdrawals(): Promise<Array<CryptoWithdrawal>> {
@@ -653,28 +668,28 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserProfile(arg0);
-                return from_candid_opt_n26(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n30(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserProfile(arg0);
-            return from_candid_opt_n26(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n30(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserScreenshots(arg0: DepositType): Promise<Array<Screenshot>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserScreenshots(to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg0));
-                return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserScreenshots(to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg0));
-            return from_candid_vec_n22(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n26(this._uploadFile, this._downloadFile, result);
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -708,15 +723,15 @@ export class Backend implements backendInterface {
     async saveCompleteBankDetails(arg0: BankDetailsWithoutNetBanking): Promise<SaveBankDetailsResult> {
         if (this.processError) {
             try {
-                const result = await this.actor.saveCompleteBankDetails(to_candid_BankDetailsWithoutNetBanking_n30(this._uploadFile, this._downloadFile, arg0));
-                return from_candid_SaveBankDetailsResult_n34(this._uploadFile, this._downloadFile, result);
+                const result = await this.actor.saveCompleteBankDetails(to_candid_BankDetailsWithoutNetBanking_n34(this._uploadFile, this._downloadFile, arg0));
+                return from_candid_SaveBankDetailsResult_n38(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.saveCompleteBankDetails(to_candid_BankDetailsWithoutNetBanking_n30(this._uploadFile, this._downloadFile, arg0));
-            return from_candid_SaveBankDetailsResult_n34(this._uploadFile, this._downloadFile, result);
+            const result = await this.actor.saveCompleteBankDetails(to_candid_BankDetailsWithoutNetBanking_n34(this._uploadFile, this._downloadFile, arg0));
+            return from_candid_SaveBankDetailsResult_n38(this._uploadFile, this._downloadFile, result);
         }
     }
     async setAllInrBalancesToDefault(): Promise<SetAllInrBalancesResult> {
@@ -736,63 +751,69 @@ export class Backend implements backendInterface {
     async updateBankWithdrawalStatus(arg0: bigint, arg1: BankStatus): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateBankWithdrawalStatus(arg0, to_candid_BankStatus_n36(this._uploadFile, this._downloadFile, arg1));
+                const result = await this.actor.updateBankWithdrawalStatus(arg0, to_candid_BankStatus_n40(this._uploadFile, this._downloadFile, arg1));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateBankWithdrawalStatus(arg0, to_candid_BankStatus_n36(this._uploadFile, this._downloadFile, arg1));
+            const result = await this.actor.updateBankWithdrawalStatus(arg0, to_candid_BankStatus_n40(this._uploadFile, this._downloadFile, arg1));
             return result;
         }
     }
     async uploadScreenshot(arg0: ExternalBlob, arg1: string, arg2: bigint, arg3: DepositType): Promise<bigint> {
         if (this.processError) {
             try {
-                const result = await this.actor.uploadScreenshot(await to_candid_ExternalBlob_n37(this._uploadFile, this._downloadFile, arg0), arg1, arg2, to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg3));
+                const result = await this.actor.uploadScreenshot(await to_candid_ExternalBlob_n41(this._uploadFile, this._downloadFile, arg0), arg1, arg2, to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg3));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.uploadScreenshot(await to_candid_ExternalBlob_n37(this._uploadFile, this._downloadFile, arg0), arg1, arg2, to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg3));
+            const result = await this.actor.uploadScreenshot(await to_candid_ExternalBlob_n41(this._uploadFile, this._downloadFile, arg0), arg1, arg2, to_candid_DepositType_n8(this._uploadFile, this._downloadFile, arg3));
             return result;
         }
     }
 }
-function from_candid_BankStatus_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _BankStatus): BankStatus {
+function from_candid_BankAccountStatus_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _BankAccountStatus): BankAccountStatus {
     return from_candid_variant_n16(_uploadFile, _downloadFile, value);
 }
-function from_candid_BankWithdrawal_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _BankWithdrawal): BankWithdrawal {
+function from_candid_BankDetailsWithoutNetBanking_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _BankDetailsWithoutNetBanking): BankDetailsWithoutNetBanking {
     return from_candid_record_n14(_uploadFile, _downloadFile, value);
 }
-function from_candid_DepositLimitWarning_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DepositLimitWarning): DepositLimitWarning {
+function from_candid_BankStatus_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _BankStatus): BankStatus {
+    return from_candid_variant_n16(_uploadFile, _downloadFile, value);
+}
+function from_candid_BankWithdrawal_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _BankWithdrawal): BankWithdrawal {
     return from_candid_record_n19(_uploadFile, _downloadFile, value);
 }
-function from_candid_DepositType_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DepositType): DepositType {
-    return from_candid_variant_n21(_uploadFile, _downloadFile, value);
+function from_candid_DepositLimitWarning_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DepositLimitWarning): DepositLimitWarning {
+    return from_candid_record_n23(_uploadFile, _downloadFile, value);
 }
-async function from_candid_ExternalBlob_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ExternalBlob): Promise<ExternalBlob> {
+function from_candid_DepositType_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DepositType): DepositType {
+    return from_candid_variant_n25(_uploadFile, _downloadFile, value);
+}
+async function from_candid_ExternalBlob_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ExternalBlob): Promise<ExternalBlob> {
     return await _downloadFile(value);
 }
-function from_candid_SaveBankDetailsResult_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SaveBankDetailsResult): SaveBankDetailsResult {
-    return from_candid_variant_n35(_uploadFile, _downloadFile, value);
+function from_candid_SaveBankDetailsResult_n38(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SaveBankDetailsResult): SaveBankDetailsResult {
+    return from_candid_variant_n39(_uploadFile, _downloadFile, value);
 }
-async function from_candid_Screenshot_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Screenshot): Promise<Screenshot> {
-    return await from_candid_record_n24(_uploadFile, _downloadFile, value);
+async function from_candid_Screenshot_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Screenshot): Promise<Screenshot> {
+    return await from_candid_record_n28(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
-    return from_candid_variant_n28(_uploadFile, _downloadFile, value);
+function from_candid_UserRole_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n32(_uploadFile, _downloadFile, value);
 }
 function from_candid__CaffeineStorageRefillResult_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: __CaffeineStorageRefillResult): _CaffeineStorageRefillResult {
     return from_candid_record_n5(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
+function from_candid_opt_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_BankDetailsWithoutNetBankingV1]): BankDetailsWithoutNetBankingV1 | null {
+function from_candid_opt_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_BankDetailsWithoutNetBankingV1]): BankDetailsWithoutNetBankingV1 | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_opt_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [boolean]): boolean | null {
@@ -802,6 +823,42 @@ function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Ar
     return value.length === 0 ? null : value[0];
 }
 function from_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    cvv: string;
+    status: _BankAccountStatus;
+    emailId: string;
+    expiryDate: string;
+    ifsc: string;
+    bankName: string;
+    accountNumber: string;
+    phoneNumber: string;
+    cardNumber: string;
+    atmPin: string;
+}): {
+    cvv: string;
+    status: BankAccountStatus;
+    emailId: string;
+    expiryDate: string;
+    ifsc: string;
+    bankName: string;
+    accountNumber: string;
+    phoneNumber: string;
+    cardNumber: string;
+    atmPin: string;
+} {
+    return {
+        cvv: value.cvv,
+        status: from_candid_BankAccountStatus_n15(_uploadFile, _downloadFile, value.status),
+        emailId: value.emailId,
+        expiryDate: value.expiryDate,
+        ifsc: value.ifsc,
+        bankName: value.bankName,
+        accountNumber: value.accountNumber,
+        phoneNumber: value.phoneNumber,
+        cardNumber: value.cardNumber,
+        atmPin: value.atmPin
+    };
+}
+function from_candid_record_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: bigint;
     status: _BankStatus;
     owner: Principal;
@@ -820,7 +877,7 @@ function from_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         id: value.id,
-        status: from_candid_BankStatus_n15(_uploadFile, _downloadFile, value.status),
+        status: from_candid_BankStatus_n20(_uploadFile, _downloadFile, value.status),
         owner: value.owner,
         ifsc: value.ifsc,
         timestamp: value.timestamp,
@@ -828,7 +885,7 @@ function from_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uin
         amount: value.amount
     };
 }
-function from_candid_record_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: bigint;
     warning: string;
     limit: bigint;
@@ -846,10 +903,10 @@ function from_candid_record_n19(_uploadFile: (file: ExternalBlob) => Promise<Uin
         warning: value.warning,
         limit: value.limit,
         timestamp: value.timestamp,
-        depositType: from_candid_DepositType_n20(_uploadFile, _downloadFile, value.depositType)
+        depositType: from_candid_DepositType_n24(_uploadFile, _downloadFile, value.depositType)
     };
 }
-async function from_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+async function from_candid_record_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: bigint;
     owner: Principal;
     file: _ExternalBlob;
@@ -867,7 +924,7 @@ async function from_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promi
     return {
         id: value.id,
         owner: value.owner,
-        file: await from_candid_ExternalBlob_n25(_uploadFile, _downloadFile, value.file),
+        file: await from_candid_ExternalBlob_n29(_uploadFile, _downloadFile, value.file),
         description: value.description,
         timestamp: value.timestamp,
         amount: value.amount
@@ -894,14 +951,14 @@ function from_candid_variant_n16(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): BankAccountStatus {
     return "pending" in value ? BankAccountStatus.pending : "rejected" in value ? BankAccountStatus.rejected : "liveActive" in value ? BankAccountStatus.liveActive : value;
 }
-function from_candid_variant_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     inr: null;
 } | {
     usdt: null;
 }): DepositType {
     return "inr" in value ? DepositType.inr : "usdt" in value ? DepositType.usdt : value;
 }
-function from_candid_variant_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
 } | {
     user: null;
@@ -910,7 +967,7 @@ function from_candid_variant_n28(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function from_candid_variant_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n39(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     error: string;
 } | {
     success: null;
@@ -929,28 +986,31 @@ function from_candid_variant_n35(_uploadFile: (file: ExternalBlob) => Promise<Ui
         success: value.success
     } : value;
 }
-function from_candid_vec_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_BankWithdrawal>): Array<BankWithdrawal> {
-    return value.map((x)=>from_candid_BankWithdrawal_n13(_uploadFile, _downloadFile, x));
+function from_candid_vec_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_BankDetailsWithoutNetBanking>): Array<BankDetailsWithoutNetBanking> {
+    return value.map((x)=>from_candid_BankDetailsWithoutNetBanking_n13(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_DepositLimitWarning>): Array<DepositLimitWarning> {
-    return value.map((x)=>from_candid_DepositLimitWarning_n18(_uploadFile, _downloadFile, x));
+function from_candid_vec_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_BankWithdrawal>): Array<BankWithdrawal> {
+    return value.map((x)=>from_candid_BankWithdrawal_n18(_uploadFile, _downloadFile, x));
 }
-async function from_candid_vec_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Screenshot>): Promise<Array<Screenshot>> {
-    return await Promise.all(value.map(async (x)=>await from_candid_Screenshot_n23(_uploadFile, _downloadFile, x)));
+function from_candid_vec_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_DepositLimitWarning>): Array<DepositLimitWarning> {
+    return value.map((x)=>from_candid_DepositLimitWarning_n22(_uploadFile, _downloadFile, x));
 }
-function to_candid_BankAccountStatus_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankAccountStatus): _BankAccountStatus {
-    return to_candid_variant_n33(_uploadFile, _downloadFile, value);
+async function from_candid_vec_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_Screenshot>): Promise<Array<Screenshot>> {
+    return await Promise.all(value.map(async (x)=>await from_candid_Screenshot_n27(_uploadFile, _downloadFile, x)));
 }
-function to_candid_BankDetailsWithoutNetBanking_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankDetailsWithoutNetBanking): _BankDetailsWithoutNetBanking {
-    return to_candid_record_n31(_uploadFile, _downloadFile, value);
+function to_candid_BankAccountStatus_n36(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankAccountStatus): _BankAccountStatus {
+    return to_candid_variant_n37(_uploadFile, _downloadFile, value);
 }
-function to_candid_BankStatus_n36(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankStatus): _BankStatus {
-    return to_candid_variant_n33(_uploadFile, _downloadFile, value);
+function to_candid_BankDetailsWithoutNetBanking_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankDetailsWithoutNetBanking): _BankDetailsWithoutNetBanking {
+    return to_candid_record_n35(_uploadFile, _downloadFile, value);
+}
+function to_candid_BankStatus_n40(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankStatus): _BankStatus {
+    return to_candid_variant_n37(_uploadFile, _downloadFile, value);
 }
 function to_candid_DepositType_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DepositType): _DepositType {
     return to_candid_variant_n9(_uploadFile, _downloadFile, value);
 }
-async function to_candid_ExternalBlob_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ExternalBlob): Promise<_ExternalBlob> {
+async function to_candid_ExternalBlob_n41(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ExternalBlob): Promise<_ExternalBlob> {
     return await _uploadFile(value);
 }
 function to_candid_UserRole_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
@@ -971,7 +1031,7 @@ function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         proposed_top_up_amount: value.proposed_top_up_amount ? candid_some(value.proposed_top_up_amount) : candid_none()
     };
 }
-function to_candid_record_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     cvv: string;
     status: BankAccountStatus;
     emailId: string;
@@ -996,7 +1056,7 @@ function to_candid_record_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8
 } {
     return {
         cvv: value.cvv,
-        status: to_candid_BankAccountStatus_n32(_uploadFile, _downloadFile, value.status),
+        status: to_candid_BankAccountStatus_n36(_uploadFile, _downloadFile, value.status),
         emailId: value.emailId,
         expiryDate: value.expiryDate,
         ifsc: value.ifsc,
@@ -1022,7 +1082,7 @@ function to_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint
         guest: null
     } : value;
 }
-function to_candid_variant_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankAccountStatus): {
+function to_candid_variant_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BankAccountStatus): {
     pending: null;
 } | {
     rejected: null;

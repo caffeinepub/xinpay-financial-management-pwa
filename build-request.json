@@ -1,77 +1,112 @@
 {
   "kind": "build_request",
-  "title": "Implement Version 33 Account System Without Failed Status",
+  "title": "Fix Active Accounts Page — Show Submitted Bank Accounts with Status Indicators",
   "projectName": "XinPay",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Implement a local authentication account system (signup, login, session management) using localStorage — similar to the version 33 approach — so users can register and log in without relying on Internet Identity. The system must store user profiles with INR/USDT balances and persist session state across page reloads.",
-      "target": "frontend",
+      "text": "Fix the Active Accounts page so it no longer shows 'Failed to Load Account' or 'Unauthorized: Only users can view bank details' errors. The page must load and display bank accounts without requiring any login or authentication.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "version 33 jaisa account wala system kre do"
+          "Failed to Load Account error — wo hata ke ek proper Active Accounts page banaya ja sakta hai",
+          "Login ki zaroorat nahi"
         ]
       },
       "acceptanceCriteria": [
-        "Users can sign up with a username and password stored in localStorage",
-        "Users can log in with valid credentials and their session persists on page reload",
-        "New accounts are created with default INR and USDT balances",
-        "Logout clears the session from localStorage"
+        "Active Accounts page loads without any error message",
+        "No authentication or login is required to view the accounts page",
+        "Backend does not return unauthorized error when fetching bank accounts"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Remove all 'Failed', 'Error', or failure-state messages and indicators from the login/signup flow and account system UI. Instead of showing failure notifications (e.g., 'Login failed', 'Signup failed', error toasts), silently handle errors or show only neutral/pending feedback to the user.",
+      "text": "Display each submitted bank account as a card on the Active Accounts page showing: Bank Name, Account Type, and Account Number with only the last 4 digits visible (rest masked).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "jo failed na bataye"
+          "Har account mein Bank Name, Account Type, Account Number (last 4 digits)"
         ]
       },
       "acceptanceCriteria": [
-        "No toast, alert, or inline message displaying 'failed', 'error', or any failure state appears during login or signup",
-        "Invalid login attempts do not show an error message to the user",
-        "Duplicate signup attempts do not show a failure message",
-        "The UI gracefully handles edge cases without surfacing failure states"
+        "Each bank account is shown as a card with Bank Name, Account Type, and masked Account Number",
+        "Account number shows only last 4 digits (e.g., ****1234)",
+        "All submitted accounts are listed on the page"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "On the Login/Signup page (LoginPage.tsx), ensure the tab-based form UI continues to work correctly with the updated local auth system, including input validation and spinner feedback, but without any failure/error toast notifications or inline error messages.",
+      "text": "Show a colored status dot on each bank account card indicating its current status: Yellow dot for Pending/Verification (default for newly submitted accounts), Green dot for Live Active, and Red dot for Error/Rejected.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "version 33 jaisa account wala system kre do jo failed na bataye"
+          "Status dots ke saath: Yellow = Pending/Verification (default), Green = Live Active, Red = Error/Rejected"
         ]
       },
       "acceptanceCriteria": [
-        "Login and Signup tabs render correctly",
-        "Spinner/loading feedback still appears during form submission",
-        "No error or failure messages are shown at any point in the auth flow",
-        "Successful login navigates the user to the main app"
+        "Each account card displays a colored status dot",
+        "Newly submitted accounts show a yellow (Pending) dot by default",
+        "Accounts with 'active' status show a green dot",
+        "Accounts with 'rejected' or 'error' status show a red dot",
+        "Status dot is clearly visible on the card"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "When a user submits bank details from the Home page or Deposit page (via BankDetailsForm), the newly submitted account must immediately appear in the Active Accounts page with a Pending (yellow) status.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1",
+          "msg-2"
+        ],
+        "quotes": [
+          "Jab Home ya Deposit page se bank details submit hon, wo turant Accounts section mein Pending status ke saath dikhe",
+          "yaha se log account detail submit krege yaad rakh na"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After submitting bank details from any page, navigating to the Accounts tab shows the new account",
+        "Newly submitted account appears with Pending (yellow) status",
+        "No page refresh required — account appears immediately after submission"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "If no bank accounts have been submitted yet, the Active Accounts page should show a friendly empty state message (e.g., 'No accounts added yet. Submit your bank details to get started.') instead of an error or blank screen.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Empty state message is shown when no accounts exist",
+        "Empty state does not show any error message",
+        "Empty state includes a prompt or hint to add bank details"
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
-    "Do not remove or break the existing Internet Identity integration — local auth should coexist or be toggled as the primary auth method",
-    "Do not show any 'failed', 'error', or failure-related UI text anywhere in the account/auth flow"
+    "Do not require login or Internet Identity authentication to view the Active Accounts page",
+    "Account numbers must be masked — show only last 4 digits",
+    "Newly submitted accounts must default to Pending (yellow) status"
   ],
   "nonGoals": [
-    "Changing the backend Motoko actor or data models",
-    "Adding new financial features (deposits, withdrawals)",
-    "Modifying pages other than LoginPage and the local auth hook",
-    "Implementing biometric or third-party authentication"
+    "Admin ability to change account status (already exists in ProfilePage)",
+    "Adding new bank account form directly on the Accounts page",
+    "Real-time backend push notifications for status changes"
   ],
   "imageRequirements": {
     "required": [],

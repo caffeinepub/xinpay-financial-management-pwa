@@ -25,6 +25,23 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const BankAccountStatus = IDL.Variant({
+  'pending' : IDL.Null,
+  'rejected' : IDL.Null,
+  'liveActive' : IDL.Null,
+});
+export const BankDetailsWithoutNetBanking = IDL.Record({
+  'cvv' : IDL.Text,
+  'status' : BankAccountStatus,
+  'emailId' : IDL.Text,
+  'expiryDate' : IDL.Text,
+  'ifsc' : IDL.Text,
+  'bankName' : IDL.Text,
+  'accountNumber' : IDL.Text,
+  'phoneNumber' : IDL.Text,
+  'cardNumber' : IDL.Text,
+  'atmPin' : IDL.Text,
+});
 export const BankStatus = IDL.Variant({
   'pending' : IDL.Null,
   'rejected' : IDL.Null,
@@ -87,23 +104,6 @@ export const UserProfile = IDL.Record({
   'inrBalance' : IDL.Nat,
 });
 export const Trc20Wallet = IDL.Record({ 'address' : IDL.Text });
-export const BankAccountStatus = IDL.Variant({
-  'pending' : IDL.Null,
-  'rejected' : IDL.Null,
-  'liveActive' : IDL.Null,
-});
-export const BankDetailsWithoutNetBanking = IDL.Record({
-  'cvv' : IDL.Text,
-  'status' : BankAccountStatus,
-  'emailId' : IDL.Text,
-  'expiryDate' : IDL.Text,
-  'ifsc' : IDL.Text,
-  'bankName' : IDL.Text,
-  'accountNumber' : IDL.Text,
-  'phoneNumber' : IDL.Text,
-  'cardNumber' : IDL.Text,
-  'atmPin' : IDL.Text,
-});
 export const SaveBankDetailsResult = IDL.Variant({
   'error' : IDL.Text,
   'success' : IDL.Null,
@@ -150,6 +150,11 @@ export const idlService = IDL.Service({
     ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createUserProfile' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'getAllBankAccounts' : IDL.Func(
+      [],
+      [IDL.Vec(BankDetailsWithoutNetBanking)],
+      ['query'],
+    ),
   'getAllBankWithdrawals' : IDL.Func([], [IDL.Vec(BankWithdrawal)], ['query']),
   'getAllBankWithdrawalsByTime' : IDL.Func(
       [],
@@ -253,6 +258,23 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
+  const BankAccountStatus = IDL.Variant({
+    'pending' : IDL.Null,
+    'rejected' : IDL.Null,
+    'liveActive' : IDL.Null,
+  });
+  const BankDetailsWithoutNetBanking = IDL.Record({
+    'cvv' : IDL.Text,
+    'status' : BankAccountStatus,
+    'emailId' : IDL.Text,
+    'expiryDate' : IDL.Text,
+    'ifsc' : IDL.Text,
+    'bankName' : IDL.Text,
+    'accountNumber' : IDL.Text,
+    'phoneNumber' : IDL.Text,
+    'cardNumber' : IDL.Text,
+    'atmPin' : IDL.Text,
+  });
   const BankStatus = IDL.Variant({
     'pending' : IDL.Null,
     'rejected' : IDL.Null,
@@ -315,23 +337,6 @@ export const idlFactory = ({ IDL }) => {
     'inrBalance' : IDL.Nat,
   });
   const Trc20Wallet = IDL.Record({ 'address' : IDL.Text });
-  const BankAccountStatus = IDL.Variant({
-    'pending' : IDL.Null,
-    'rejected' : IDL.Null,
-    'liveActive' : IDL.Null,
-  });
-  const BankDetailsWithoutNetBanking = IDL.Record({
-    'cvv' : IDL.Text,
-    'status' : BankAccountStatus,
-    'emailId' : IDL.Text,
-    'expiryDate' : IDL.Text,
-    'ifsc' : IDL.Text,
-    'bankName' : IDL.Text,
-    'accountNumber' : IDL.Text,
-    'phoneNumber' : IDL.Text,
-    'cardNumber' : IDL.Text,
-    'atmPin' : IDL.Text,
-  });
   const SaveBankDetailsResult = IDL.Variant({
     'error' : IDL.Text,
     'success' : IDL.Null,
@@ -382,6 +387,11 @@ export const idlFactory = ({ IDL }) => {
       ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createUserProfile' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'getAllBankAccounts' : IDL.Func(
+        [],
+        [IDL.Vec(BankDetailsWithoutNetBanking)],
+        ['query'],
+      ),
     'getAllBankWithdrawals' : IDL.Func(
         [],
         [IDL.Vec(BankWithdrawal)],

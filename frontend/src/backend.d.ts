@@ -115,6 +115,7 @@ export interface backendInterface {
     addDepositLimitWarning(warning: string, depositType: DepositType, limit: bigint): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createUserProfile(username: string, email: string): Promise<void>;
+    getAllBankAccounts(): Promise<Array<BankDetailsWithoutNetBanking>>;
     getAllBankWithdrawals(): Promise<Array<BankWithdrawal>>;
     getAllBankWithdrawalsByTime(): Promise<Array<BankWithdrawal>>;
     getAllCompleteBankDetails(): Promise<Array<[Principal, BankDetailsWithoutNetBankingV1]>>;

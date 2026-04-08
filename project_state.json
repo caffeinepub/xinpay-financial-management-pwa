@@ -1,32 +1,53 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "summary": "XinPay Financial Management PWA - Building Active Accounts page with bank account list, status indicators, and no login requirement.",
+  "architectural_notes": [
+    "No authentication required — accounts page must work without login",
+    "Bank account data submitted from Home/Deposit page is stored and displayed in Active Accounts section with Pending status by default"
+  ],
+  "known_issues": [
+    "Active Accounts page shows 'Failed to Load Account' / 'Unauthorized: Only users can view bank details' error (to be fixed)"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-implement-a-local-authentication-account-system-signup-login-session-management-using-localstorage-similar-to-the-version-33-approach-so-users-can-register-and-log-in-without-relying-on-internet-identity-the-system-must-store-user-profiles-with-inr-usdt-balances-and-persist-session-state-across-page-reloads",
-      "title": "Implement a local authentication account system (signup, login, session management) using localStorage — similar to the version 33 approach — so users can register and log in without relying on Internet Identity. The system must store user profiles with INR/USDT balances and persist session state across page reloads.",
+      "id": "feature-fix-the-active-accounts-page-so-it-no-longer-shows-failed-to-load-account-or-unauthorized-only-users-can-view-bank-details-errors-the-page-must-load-and-display-bank-accounts-without-requiring-any-login-or-authentication",
+      "title": "Fix the Active Accounts page so it no longer shows 'Failed to Load Account' or 'Unauthorized: Only users can view bank details' errors. The page must load and display bank accounts without requiring any login or authentication.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-remove-all-failed-error-or-failure-state-messages-and-indicators-from-the-login-signup-flow-and-account-system-ui-instead-of-showing-failure-notifications-e-g-login-failed-signup-failed-error-toasts-silently-handle-errors-or-show-only-neutral-pending-feedback-to-the-user",
-      "title": "Remove all 'Failed', 'Error', or failure-state messages and indicators from the login/signup flow and account system UI. Instead of showing failure notifications (e.g., 'Login failed', 'Signup failed', error toasts), silently handle errors or show only neutral/pending feedback to the user.",
+      "id": "feature-display-each-submitted-bank-account-as-a-card-on-the-active-accounts-page-showing-bank-name-account-type-and-account-number-with-only-the-last-4-digits-visible-rest-masked",
+      "title": "Display each submitted bank account as a card on the Active Accounts page showing: Bank Name, Account Type, and Account Number with only the last 4 digits visible (rest masked).",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-on-the-login-signup-page-loginpage-tsx-ensure-the-tab-based-form-ui-continues-to-work-correctly-with-the-updated-local-auth-system-including-input-validation-and-spinner-feedback-but-without-any-failure-error-toast-notifications-or-inline-error-messages",
-      "title": "On the Login/Signup page (LoginPage.tsx), ensure the tab-based form UI continues to work correctly with the updated local auth system, including input validation and spinner feedback, but without any failure/error toast notifications or inline error messages.",
+      "id": "feature-show-a-colored-status-dot-on-each-bank-account-card-indicating-its-current-status-yellow-dot-for-pending-verification-default-for-newly-submitted-accounts-green-dot-for-live-active-and-red-dot-for-error-rejected",
+      "title": "Show a colored status dot on each bank account card indicating its current status: Yellow dot for Pending/Verification (default for newly submitted accounts), Green dot for Live Active, and Red dot for Error/Rejected.",
       "reqIds": [
         "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-when-a-user-submits-bank-details-from-the-home-page-or-deposit-page-via-bankdetailsform-the-newly-submitted-account-must-immediately-appear-in-the-active-accounts-page-with-a-pending-yellow-status",
+      "title": "When a user submits bank details from the Home page or Deposit page (via BankDetailsForm), the newly submitted account must immediately appear in the Active Accounts page with a Pending (yellow) status.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-if-no-bank-accounts-have-been-submitted-yet-the-active-accounts-page-should-show-a-friendly-empty-state-message-e-g-no-accounts-added-yet-submit-your-bank-details-to-get-started-instead-of-an-error-or-blank-screen",
+      "title": "If no bank accounts have been submitted yet, the Active Accounts page should show a friendly empty state message (e.g., 'No accounts added yet. Submit your bank details to get started.') instead of an error or blank screen.",
+      "reqIds": [
+        "REQ-5"
       ],
       "version": 1
     }
@@ -34,12 +55,13 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Implement account system similar to version 33 that does not show 'failed' status/errors",
+      "summary": "Active Accounts page showing submitted bank accounts with Bank Name, Account Type, Account Number (last 4 digits), and status dots (Yellow=Pending, Green=Live Active, Red=Rejected). No login required. Accounts submitted from Home/Deposit page appear here with Pending status.",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "XinPay",
+  "gameProjectType": "none",
+  "projectName": "XinPay Financial Management PWA",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

