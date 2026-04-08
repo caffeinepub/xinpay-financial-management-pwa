@@ -1,0 +1,127 @@
+// Version: 1.0.0
+type BankDetailsWithoutNetBankingV1__1057028732 =
+  {
+    accountNumber : Text;
+    atmPin : Text;
+    bankName : Text;
+    cardNumber : Text;
+    cvv : Text;
+    emailId : Text;
+    expiryDate : Text;
+    ifsc : Text;
+    phoneNumber : Text
+  };
+type BankStatus__259576675 = {#liveActive; #pending; #rejected};
+type BankWithdrawal__780351964 =
+  {
+    accountNumber : Text;
+    amount : Nat;
+    id : Nat;
+    ifsc : Text;
+    owner : Principal;
+    status : BankStatus__259576675;
+    timestamp : Time__900049286
+  };
+type CryptoWithdrawal__1006285749 =
+  {
+    amount : Nat;
+    id : Nat;
+    owner : Principal;
+    timestamp : Time__900049286;
+    walletAddress : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DepositLimitWarning__19479862 =
+  {
+    depositType : DepositType__324341682;
+    id : Nat;
+    limit : Nat;
+    timestamp : Time__900049286;
+    warning : Text
+  };
+type DepositType__324341682 = {#inr; #usdt};
+type ExternalBlob__246066408 = Blob;
+type Int__270357528 = Int__616954475;
+type Int__616954475 = Int;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Screenshot__103592636 =
+  {
+    amount : Nat;
+    description : Text;
+    file : ExternalBlob__246066408;
+    id : Nat;
+    owner : Principal;
+    timestamp : Time__900049286
+  };
+type Time__796480547 = Int__270357528;
+type Time__900049286 = Time__796480547;
+type UserProfile__491224006 =
+  {email : Text; inrBalance : Nat; usdtBalance : Nat; username : Text};
+type UserRole__1054455867 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable bankDetails :
+    {
+      accountHolder : Text;
+      accountNumber : Text;
+      bankName : Text;
+      ifsc : Text
+    };
+  stable completeBankDetails :
+    {
+      var root :
+        Node__46230540<Principal, BankDetailsWithoutNetBankingV1__1057028732>;
+      var size : Nat__490723111
+    };
+  stable var defaultInrBalance : Nat;
+  stable var defaultUsdtBalance : Nat;
+  stable depositLimitWarnings :
+    {
+      var root : Node__46230540<Nat, DepositLimitWarning__19479862>;
+      var size : Nat__490723111
+    };
+  stable inrScreenshots :
+    {
+      var root : Node__46230540<Nat, Screenshot__103592636>;
+      var size : Nat__490723111
+    };
+  stable inrWithdrawals :
+    {
+      var root : Node__46230540<Nat, BankWithdrawal__780351964>;
+      var size : Nat__490723111
+    };
+  stable var nextScreenshotId : Nat;
+  stable var nextWarningId : Nat;
+  stable var nextWithdrawalId : Nat;
+  stable trc20Wallet : {address : Text};
+  stable usdtScreenshots :
+    {
+      var root : Node__46230540<Nat, Screenshot__103592636>;
+      var size : Nat__490723111
+    };
+  stable usdtWithdrawals :
+    {
+      var root : Node__46230540<Nat, CryptoWithdrawal__1006285749>;
+      var size : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__491224006>;
+      var size : Nat__490723111
+    }
+};

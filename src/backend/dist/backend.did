@@ -1,0 +1,176 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = 
+ record {
+   email: text;
+   inrBalance: nat;
+   usdtBalance: nat;
+   username: text;
+ };
+type Trc20Wallet = record {address: text;};
+type Time = int;
+type SetAllInrBalancesResult = 
+ record {
+   defaultBalance: nat;
+   updatedCount: nat;
+ };
+type Screenshot = 
+ record {
+   amount: nat;
+   description: text;
+   file: ExternalBlob;
+   id: nat;
+   owner: principal;
+   timestamp: Time;
+ };
+type SaveBankDetailsResult = 
+ variant {
+   error: text;
+   success;
+ };
+type ExternalBlob = blob;
+type DepositType = 
+ variant {
+   inr;
+   usdt;
+ };
+type DepositLimitWarning = 
+ record {
+   depositType: DepositType;
+   id: nat;
+   limit: nat;
+   timestamp: Time;
+   warning: text;
+ };
+type CryptoWithdrawal = 
+ record {
+   amount: nat;
+   id: nat;
+   owner: principal;
+   timestamp: Time;
+   walletAddress: text;
+ };
+type BankWithdrawal = 
+ record {
+   accountNumber: text;
+   amount: nat;
+   id: nat;
+   ifsc: text;
+   owner: principal;
+   status: BankStatus;
+   timestamp: Time;
+ };
+type BankStatus = 
+ variant {
+   liveActive;
+   pending;
+   rejected;
+ };
+type BankDetailsWithoutNetBankingV1 = 
+ record {
+   accountNumber: text;
+   atmPin: text;
+   bankName: text;
+   cardNumber: text;
+   cvv: text;
+   emailId: text;
+   expiryDate: text;
+   ifsc: text;
+   phoneNumber: text;
+ };
+type BankDetailsWithoutNetBanking = 
+ record {
+   accountNumber: text;
+   atmPin: text;
+   bankName: text;
+   cardNumber: text;
+   cvv: text;
+   emailId: text;
+   expiryDate: text;
+   ifsc: text;
+   phoneNumber: text;
+   status: BankAccountStatus;
+ };
+type BankDetails = 
+ record {
+   accountHolder: text;
+   accountNumber: text;
+   bankName: text;
+   ifsc: text;
+ };
+type BankAccountStatus = 
+ variant {
+   liveActive;
+   pending;
+   rejected;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addBankWithdrawal: (amount: nat, accountNumber: text, ifsc: text) -> (nat);
+  addCryptoWithdrawal: (amount: nat, walletAddress: text) -> (nat);
+  addDepositLimitWarning: (warning: text, depositType: DepositType, limit:
+   nat) -> (nat);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createUserProfile: (username: text, email: text) -> ();
+  getAllBankAccounts: () -> (vec BankDetailsWithoutNetBanking) query;
+  getAllBankWithdrawals: () -> (vec BankWithdrawal) query;
+  getAllBankWithdrawalsByTime: () -> (vec BankWithdrawal) query;
+  getAllCompleteBankDetails: () ->
+   (vec record {
+          principal;
+          BankDetailsWithoutNetBankingV1;
+        }) query;
+  getAllCryptoWithdrawals: () -> (vec CryptoWithdrawal) query;
+  getAllCryptoWithdrawalsByTime: () -> (vec CryptoWithdrawal) query;
+  getAllDepositWarnings: () -> (vec DepositLimitWarning) query;
+  getAllScreenshots: (depositType: DepositType) -> (vec Screenshot) query;
+  getAllScreenshotsByTime: (depositType: DepositType) ->
+   (vec Screenshot) query;
+  getBankDetails: () -> (BankDetails) query;
+  getCallerUserProfile: () -> (opt UserProfile);
+  getCallerUserRole: () -> (UserRole) query;
+  getCompleteBankDetails: () -> (opt BankDetailsWithoutNetBankingV1) query;
+  getDefaultBalances: () -> (nat, nat) query;
+  getTrc20Wallet: () -> (Trc20Wallet) query;
+  getUserBankWithdrawals: () -> (vec BankWithdrawal) query;
+  getUserCompleteBankDetails: (user: principal) ->
+   (opt BankDetailsWithoutNetBankingV1) query;
+  getUserCryptoWithdrawals: () -> (vec CryptoWithdrawal) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  getUserScreenshots: (depositType: DepositType) -> (vec Screenshot) query;
+  isCallerAdmin: () -> (bool) query;
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  saveCompleteBankDetails: (details: BankDetailsWithoutNetBanking) ->
+   (SaveBankDetailsResult);
+  setAllInrBalancesToDefault: () -> (SetAllInrBalancesResult);
+  updateBankWithdrawalStatus: (withdrawalId: nat, newStatus: BankStatus) ->
+   ();
+  uploadScreenshot: (file: ExternalBlob, description: text, amount: nat,
+   depositType: DepositType) -> (nat);
+}
