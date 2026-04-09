@@ -126,14 +126,6 @@ export default function INRDepositForm() {
                 <Copy className="h-5 w-5" />
               </Button>
             </div>
-
-            {/* Account Holder */}
-            <div className="p-3 bg-[#0B1C14] rounded-lg border border-[#00E5FF]/10">
-              <p className="text-gray-400 text-xs mb-1">Account Holder</p>
-              <p className="text-white font-medium text-base">
-                {bankDetails.accountHolder}
-              </p>
-            </div>
           </div>
         )}
       </Card>
@@ -146,7 +138,7 @@ export default function INRDepositForm() {
         <div className="flex justify-center">
           <div className="bg-white p-3 rounded-lg">
             <img
-              src="/assets/whatsapp_image_2026-04-05_at_11.59.42_am-019d6c7e-6346-7795-9970-e08e2f1b8e38.jpeg"
+              src="/assets/whatsapp_image_2026-04-09_at_3.26.02_pm-019d7200-9032-771c-a1b6-ed99cf8e28ff.jpeg"
               alt="UPI QR Code"
               className="w-[150px] h-[150px] object-contain"
             />

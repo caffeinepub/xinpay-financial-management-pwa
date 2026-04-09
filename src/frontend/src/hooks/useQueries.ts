@@ -110,10 +110,9 @@ export function useGetBankDetails() {
   return useQuery({
     queryKey: ["bankDetails"],
     queryFn: async () => ({
-      bankName: "Punjab & Sind Bank",
-      accountNumber: "01031001005357",
-      ifsc: "PSIB0000103",
-      accountHolder: "Mr. GOURAV KASERA",
+      bankName: "Indian Post Payment Bank",
+      accountNumber: "055110171942",
+      ifsc: "IPOS0000001",
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });

@@ -35,63 +35,78 @@ type ModalType =
   | "salary"
   | null;
 
+interface ActionItem {
+  icon: React.ElementType;
+  label: string;
+  colorClass: string;
+  modal?: ModalType;
+  navigate?: "home" | "deposit" | "refer" | "support" | "profile";
+}
+
 export default function HomePage({ userProfile, onNavigate }: HomePageProps) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
 
-  // Convert bigint balances to display format with two decimal places
   const inrBalance = Number(userProfile.inrBalance);
   const usdtBalance = Number(userProfile.usdtBalance);
 
-  const actions = [
+  const actions: ActionItem[] = [
     {
       icon: Download,
       label: "INR Deposit",
-      color: "bg-blue-600",
-      modal: "inr-deposit" as ModalType,
+      colorClass: "bg-blue-600",
+      modal: "inr-deposit",
     },
     {
       icon: Upload,
       label: "INR Withdraw",
-      color: "bg-green-600",
-      modal: "inr-withdraw" as ModalType,
+      colorClass: "bg-green-600",
+      modal: "inr-withdraw",
     },
     {
       icon: Wallet,
       label: "USDT Deposit",
-      color: "bg-purple-600",
-      modal: "usdt-deposit" as ModalType,
+      colorClass: "bg-purple-600",
+      modal: "usdt-deposit",
     },
     {
       icon: Send,
       label: "USDT Withdraw",
-      color: "bg-orange-600",
-      modal: "usdt-withdraw" as ModalType,
+      colorClass: "bg-orange-600",
+      modal: "usdt-withdraw",
     },
     {
       icon: Percent,
       label: "Commission",
-      color: "bg-pink-600",
-      modal: "commission" as ModalType,
+      colorClass: "bg-pink-600",
+      modal: "commission",
     },
     {
       icon: Users,
       label: "Refer",
-      color: "bg-cyan-600",
-      onClick: () => onNavigate("refer"),
+      colorClass: "bg-cyan-600",
+      navigate: "refer",
     },
     {
       icon: Briefcase,
       label: "Salary",
-      color: "bg-indigo-600",
-      modal: "salary" as ModalType,
+      colorClass: "bg-indigo-600",
+      modal: "salary",
     },
     {
       icon: MessageCircle,
       label: "Contact",
-      color: "bg-teal-600",
-      onClick: () => onNavigate("support"),
+      colorClass: "bg-teal-600",
+      navigate: "support",
     },
   ];
+
+  const handleActionClick = (action: ActionItem) => {
+    if (action.navigate) {
+      onNavigate(action.navigate);
+    } else if (action.modal) {
+      setActiveModal(action.modal);
+    }
+  };
 
   return (
     <>
@@ -113,24 +128,24 @@ export default function HomePage({ userProfile, onNavigate }: HomePageProps) {
         </div>
 
         {/* Action Grid */}
-        <div className="grid grid-cols-4 gap-3">
+        <div
+          className="grid grid-cols-4 gap-3 relative z-10"
+          data-ocid="home-action-grid"
+        >
           {actions.map((action) => (
             <button
               key={action.label}
               type="button"
-              onClick={() => {
-                if (action.onClick) {
-                  action.onClick();
-                } else if (action.modal) {
-                  setActiveModal(action.modal);
-                }
-              }}
-              className="flex flex-col items-center space-y-2 p-3 rounded-lg bg-[#1C2431] border border-[#00E5FF]/20 hover:border-[#00E5FF]/50 transition-colors"
+              data-ocid={`action-btn-${action.label.toLowerCase().replace(/\s+/g, "-")}`}
+              onClick={() => handleActionClick(action)}
+              className="flex flex-col items-center space-y-2 p-3 rounded-lg bg-[#1C2431] border border-[#00E5FF]/20 hover:border-[#00E5FF]/60 active:scale-95 transition-all duration-150 cursor-pointer select-none"
             >
-              <div className={`${action.color} p-3 rounded-full`}>
+              <div
+                className={`${action.colorClass} p-3 rounded-full pointer-events-none`}
+              >
                 <action.icon className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xs text-gray-300 text-center leading-tight">
+              <span className="text-xs text-gray-300 text-center leading-tight pointer-events-none">
                 {action.label}
               </span>
             </button>
@@ -174,7 +189,7 @@ export default function HomePage({ userProfile, onNavigate }: HomePageProps) {
         <BankDetailsForm />
       </div>
 
-      {/* Modals */}
+      {/* Modals — rendered outside scroll container to avoid clipping */}
       <INRDepositModal
         open={activeModal === "inr-deposit"}
         onClose={() => setActiveModal(null)}
